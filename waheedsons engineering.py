@@ -702,9 +702,9 @@ def ADD_screen ():
 
 
 def History_screen ():
-        # method for preview text widget
+        # method for preview text widget entr_rate.get()}\ndesc {str(entr_description.get())}\nAmount    {str(entr_amount.get())}\nT Amount     {str(entr_t_amount.get())}\nBalance   {entr_discount.get()}\nDiscount     {str(entr_balance.get())}\ndelivery   {entr_delivery.get()}\nstatus   {str(selected_status.get())}
     def preview ():
-        new = str(f"name     {str(entr_name.get())}\ncontact    {str(entr_contact.get())}\nqty     {str(entr_qty.get())}\nrate      {entr_rate.get()}\ndesc {str(entr_description.get())}\nAmount    {str(entr_amount.get())}\nT Amount     {str(entr_t_amount.get())}\nBalance   {entr_discount.get()}\nDiscount     {str(entr_balance.get())}\ndelivery   {entr_delivery.get()}\nstatus   {str(selected_status.get())} ")
+        new = str(f"name     {str(entr_name.get())}\ncontact    {str(entr_contact.get())}\nqty     {str(entr_qty.get())}\nrate       ")
         tex_1.delete(0.0,tk.END)
         tex_1.insert(tk.END,str(new))
         #print (str (new))
@@ -715,17 +715,17 @@ def History_screen ():
       contact_t = "+92"+entr_contact.get()
       qty_t = entr_qty.get()
       description_t = entr_description.get()
-      rate_t = entr_rate.get()
-      amount_t = entr_amount.get()
-      T_amount_t= entr_t_amount.get()
-      balance_t = entr_balance.get()
-      discount_t =  entr_discount.get()
-      delivery_t = entr_delivery.get()
-      status_t = selected_status.get()
+    #   rate_t = entr_rate.get()
+    #   amount_t = entr_amount.get()
+    #   T_amount_t= entr_t_amount.get()
+    #   balance_t = entr_balance.get()
+    #   discount_t =  entr_discount.get()
+    #   delivery_t = entr_delivery.get()
+    #  status_t = selected_status.get()
     
-      try:
-        ins = "INSERT INTO Customers_list(Name,Contact,Qty,description,rate,Amount,T_Amount,discount,balance,delivery,status)values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        t = (name_t,contact_t,qty_t,description_t,rate_t,amount_t,T_amount_t,balance_t,discount_t,delivery_t,status_t)
+      try:           #,rate_t,amount_t,T_amount_t,balance_t,discount_t,delivery_t description,rate,Amount,T_Amount,discount,balance,delivery,
+        ins = "INSERT INTO token_list(Name,Contact,Qty,description)values(%s,%s,%s,%s)"
+        t = (name_t,contact_t,qty_t,description_t)
         my_cur.execute(ins,t)
         con.commit()
         tex.delete(0.0,tk.END)
@@ -740,7 +740,7 @@ def History_screen ():
         for item in tree_view.get_children():
             tree_view.delete(item)
 
-        my_cur.execute("SELECT * FROM Customers_list order by Sno DESC LIMIT 100")
+        my_cur.execute("SELECT * FROM token_list order by Sno DESC LIMIT 100")
         my_result = my_cur.fetchall()
 
         for index, item in enumerate(my_result, start=1):
@@ -759,7 +759,7 @@ def History_screen ():
         while True:
             try:
                 for x in range(1):
-                    my_cur.execute("SELECT * FROM Customers_list ORDER BY Sno DESC LIMIT 1")
+                    my_cur.execute("SELECT * FROM token_list ORDER BY Sno DESC LIMIT 1")
                     last = my_cur.fetchone()
                 so = s.socket(s.AF_INET, s.SOCK_STREAM)
                 host = s.gethostname()
@@ -780,6 +780,10 @@ def History_screen ():
                 tex.delete(0.0, tk.END)
                 tex.insert(tk.END, f"Error  {e}")
         #frame fro treeview
+    def all_done ():
+        inserts()
+        get_data()
+        pass
     tok_f = ttk.LabelFrame(root,width=1255,height=605,text="  TOKEN SCREEN  ")
     #Home_f.place(x=260,y=105)
     tok_f.grid(row=2,column=0,sticky="n")    
@@ -789,9 +793,9 @@ def History_screen ():
     y_scrol = ttk.Scrollbar(tree_fram,)
     y_scrol.place(x=1230,y=0,relheight=1,relwidth=0.01)
     # creating  treeview 
-    cols = ("Sno","Time","Name","Contacts","Qty","DESCRIPTION","RATE","AMOUNT","Total Amount","Discount","Balance","Delivery","Status")
+    cols = ("Sno","Time","Name","Contacts","Qty","DESCRIPTION")
     tree_view = ttk.Treeview(tree_fram,columns=cols,height=7,yscrollcommand=y_scrol.set,show=["headings"])
-    #tree_view.column("",width=0)
+    #tree_view.column("",width=0),"RATE","AMOUNT","Total Amount","Discount","Balance","Delivery","Status"
     for name in cols:
        
        tree_view.heading(name,text=name)
@@ -801,13 +805,13 @@ def History_screen ():
     tree_view.column("Contacts",width=110)   #120
     tree_view.column("Qty",width=25)         #40
     tree_view.column("DESCRIPTION",width=320)#180
-    tree_view.column("RATE",width=60)        #60
-    tree_view.column("AMOUNT",width=60)      #80
-    tree_view.column("Total Amount",width=60)#80
-    tree_view.column("Discount",width=60)    #80
-    tree_view.column("Balance",width=60)     #80
-    tree_view.column("Delivery",width=60)    #80
-    tree_view.column("Status",width=60)      #80
+    # tree_view.column("RATE",width=60)        #60
+    # tree_view.column("AMOUNT",width=60)      #80
+    # tree_view.column("Total Amount",width=60)#80
+    # tree_view.column("Discount",width=60)    #80
+    # tree_view.column("Balance",width=60)     #80
+    # tree_view.column("Delivery",width=60)    #80
+    # tree_view.column("Status",width=60)      #80
     
     tree_view.place(x=5,y=0)
     
@@ -821,18 +825,18 @@ def History_screen ():
     c.place(x=10,y=450)
     d = tk.Label(tok_f,width=16,text="DESCRIPTION",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
     d.place(x=10,y=490)
-    e = tk.Label(tok_f,width=16,text="RATE",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
-    e.place(x=10,y=530)
-    f = tk.Label(tok_f,width=16,text="AMOUNT",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
-    f.place(x=500,y=370)
-    h = tk.Label(tok_f,width=16,text="TOTAL AMOUNT",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
-    h.place(x=500,y=410)
-    i = tk.Label(tok_f,width=16,text="BALANCE",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
-    i.place(x=500,y=450)
-    j = tk.Label(tok_f,width=16,text="DISCOUNT",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
-    j.place(x=500,y=490)
-    k = tk.Label(tok_f,width=16,text="DELIVERY",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
-    k.place(x=500,y=530)
+    # e = tk.Label(tok_f,width=16,text="RATE",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
+    # e.place(x=10,y=530)
+    # f = tk.Label(tok_f,width=16,text="AMOUNT",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
+    # f.place(x=500,y=370)
+    # h = tk.Label(tok_f,width=16,text="TOTAL AMOUNT",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
+    # h.place(x=500,y=410)
+    # i = tk.Label(tok_f,width=16,text="BALANCE",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
+    # i.place(x=500,y=450)
+    # j = tk.Label(tok_f,width=16,text="DISCOUNT",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
+    # j.place(x=500,y=490)
+    # k = tk.Label(tok_f,width=16,text="DELIVERY",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
+    # k.place(x=500,y=530)
     
     l1 = tk.Frame(tok_f,bg="grey",width=5,height=240)
     l1.place(x=485,y=355)
@@ -849,21 +853,21 @@ def History_screen ():
     entr_qty.place(x=205,y=445)
     entr_description = ttk.Entry(tok_f,font=("helvetica",12))
     entr_description.place(x=205,y=485)
-    entr_rate = ttk.Entry(tok_f,font=("helvetica",12))
-    entr_rate.place(x=205,y=525)
-    entr_amount = ttk.Entry(tok_f,font=("helvetica",12))
-    entr_amount.place(x=695,y=365)
-    entr_t_amount = ttk.Entry(tok_f,font=("helvetica",12))
-    entr_t_amount.place(x=695,y=405)
-    entr_discount= ttk.Entry(tok_f,font=("helvetica",12))
-    entr_discount.place(x=695,y=445)
-    entr_balance = ttk.Entry(tok_f,font=("helvetica",12))
-    entr_balance.place(x=695,y=485) 
-    entr_delivery = ttk.Entry(tok_f,font=("helvetica",12))
-    entr_delivery.place(x=695,y=525)
+    # entr_rate = ttk.Entry(tok_f,font=("helvetica",12))
+    # entr_rate.place(x=205,y=525)
+    # entr_amount = ttk.Entry(tok_f,font=("helvetica",12))
+    # entr_amount.place(x=695,y=365)
+    # entr_t_amount = ttk.Entry(tok_f,font=("helvetica",12))
+    # entr_t_amount.place(x=695,y=405)
+    # entr_discount= ttk.Entry(tok_f,font=("helvetica",12))
+    # entr_discount.place(x=695,y=445)
+    # entr_balance = ttk.Entry(tok_f,font=("helvetica",12))
+    # entr_balance.place(x=695,y=485) 
+    # entr_delivery = ttk.Entry(tok_f,font=("helvetica",12))
+    # entr_delivery.place(x=695,y=525)
     
     #creating cut buttons for entries
-    submit_but = ttk.Button(tok_f,width=10,text="SAVE",command=all)
+    submit_but = ttk.Button(tok_f,width=10,text="SAVE",command=all_done)
     submit_but.place(x=670,y=265)
     generate_but = ttk.Button(tok_f,width=10,text="PRINT",command=lambda: generate_slip(port))
     generate_but.place(x=870,y=265)

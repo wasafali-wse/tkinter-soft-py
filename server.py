@@ -49,6 +49,8 @@ try:
             print(e)
 
         if client_data.get("command", "") == "generate":
+            cm = client_data.get("command","")
+            print(cm)
             my_cur.execute("SELECT * FROM Customers_list ORDER BY Sno DESC LIMIT 1")
             last = my_cur.fetchone()
             
@@ -66,29 +68,31 @@ try:
                 #"C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
                 doc.save(f"{path}/new_invoice '{b}' '{c}'.docx")
                 #file = "C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
-                file = f"{path}/new_invoice '{b}' '{c}'.docx"
-                try :
+                #file = f"{path}/new_invoice '{b}' '{c}'.docx"
+                # i commented them out for try 
+                # try :
 
-                    if os.path.exists(file):
-                        win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(printer))
-                        mes = f" invoice generated successfully name {b} sno {c}"
-                        client_socket.send(mes.encode("utf-8"))
-                        print (f" last generated invoice name {0},sno {1}").format(b,c)
-                    else :
+                #     if os.path.exists(file):
+                #         win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(printer))
+                #         mes = f" invoice generated successfully name {b} sno {c}"
+                #         client_socket.send(mes.encode("utf-8"))
+                #         print (f" last generated invoice name {0},sno {1}").format(b,c)
+                #     else :
                     
-                        er = "error occured while printng"
-                        client_socket.send(er.encode("utf-8"))
-                except Exception as e :
-                    er = str(e)
-                    client_socket.send(er.encode("utf-8"))     
+                #         er = "error occured while printng"
+                #         client_socket.send(er.encode("utf-8"))
+                # except Exception as e :
+                #     er = str(e)
+                #     client_socket.send(er.encode("utf-8"))     
             else:
                 mes = "No new records found in the database."
 
                 client_socket.send(mes.encode("utf-8"))
     #this section is for printing serial vise            
         elif client_data.get("command", "") == "serial":
+
     #    else:
-            print("Received data from client:", client_data)
+            print("Received data from client:", client_data.get("command",""))
             sno = client_data.get("sno","")
             sn_o = str(sno)
             my_cur.execute(f"Select * FROM Customers_list WHERE Sno ={sn_o}")
@@ -106,22 +110,23 @@ try:
                 doc.save(f"{path}/new_invoice '{b}' '{c}'.docx")
                 #file = "C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
                 file = f"{path}/new_invoice '{b}' '{c}'.docx"
-                try :
+                #i commented them out 
+                # try :
 
-                    if os.path.exists(file):
-                        win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(printer))
-                        mes = f" invoice generated successfully name {b} sno {c}"
-                        client_socket.send(mes.encode("utf-8"))
-                        print (f"last invoice generated name {b} sno {c}")
-                    else :
+                #     if os.path.exists(file):
+                #         win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(printer))
+                #         mes = f" invoice generated successfully name {b} sno {c}"
+                #         client_socket.send(mes.encode("utf-8"))
+                #         print (f"last invoice generated name {b} sno {c}")
+                #     else :
                     
-                        er = "error occured while printng"
-                        client_socket.send(er.encode("utf-8"))
-                        print(er)
-                except Exception as e :
-                    er = str(e)
-                    client_socket.send(er.encode("utf-8"))  
-                    print(er)   
+                #         er = "error occured while printng"
+                #         client_socket.send(er.encode("utf-8"))
+                #         print(er)
+                # except Exception as e :
+                #     er = str(e)
+                #     client_socket.send(er.encode("utf-8"))  
+                #     print(er)   
             else:
                 mes = "No new records found in the database."
 
@@ -133,7 +138,7 @@ try:
 # this section is for token printing 
         elif  client_data.get("command", "") == "token":
 
-            print("Received data from client:", client_data)
+            print("Received data from client:", client_data.get("command",""))
             # sno = client_data.get("sno","")
             # sn_o = str(sno)
             my_cur.execute(f"Select * FROM Token_list ORDER BY Sno DESC LIMIT 1")
@@ -150,22 +155,23 @@ try:
                 doc.save(f"{path}/new_token '{b}' '{c}'.docx")
                 #file = "C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
                 file = f"{path}/new_token '{b}' '{c}'.docx"
-                try :
+                #i commented them for try
+                # try :
 
-                    if os.path.exists(file):
-                        win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(printer))
-                        mes = f" token generated successfully name {b} sno {c}"
-                        client_socket.send(mes.encode("utf-8"))
-                        print (f"token generated name {b} sno {c}")
-                    else :
+                #     if os.path.exists(file):
+                #         win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(printer))
+                #         mes = f" token generated successfully name {b} sno {c}"
+                #         client_socket.send(mes.encode("utf-8"))
+                #         print (f"token generated name {b} sno {c}")
+                #     else :
                     
-                        er = "error occured while printng"
-                        client_socket.send(er.encode("utf-8"))
-                        print(er)
-                except Exception as e :
-                    er = str(e)
-                    client_socket.send(er.encode("utf-8"))  
-                    print(er)   
+                #         er = "error occured while printng"
+                #         client_socket.send(er.encode("utf-8"))
+                #         print(er)
+                # except Exception as e :
+                #     er = str(e)
+                #     client_socket.send(er.encode("utf-8"))  
+                #     print(er)   
             else:
                 mes = "No new records found in the database."
 
@@ -176,14 +182,14 @@ try:
             print(mes)  
     # this section isfor label printing         
         else:
-            print("Received data from client:", client_data)
+            print("Received data from client:", client_data.get("command",""))
             sno = client_data.get("sno","")
             sn_o = str(sno)
             my_cur.execute(f"Select * FROM Customers_list WHERE Sno ={sn_o}")
-            slip = my_cur.fetchone()
+            label = my_cur.fetchone()
             current_time = tm.strftime("%Y-%m-%d T%H:%M")
-            if slip:
-                sno, time, name, contact, qty, description, rate, amount, tamount, discount, balance, delivery, status = slip
+            if label:
+                sno, time, name, contact, qty, description, rate, amount, tamount, discount, balance, delivery, status = label
                 doc = DocxTemplate("utility/label.docx")
                 doc.render({"sno": f"INV0{sno}", "time_now": current_time, "name": name, "status": status})
                 b = str(name)
@@ -193,22 +199,23 @@ try:
                 doc.save(f"{path}/new_invoice '{b}' '{c}'.docx")
                 #file = "C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
                 file = f"{path}/new_invoice '{b}' '{c}'.docx"
-                try :
+                #i commented them for try
+                # try :
 
-                    if os.path.exists(file):
-                        win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(label_printer))
-                        mes = f" invoice generated successfully name {b} sno {c}"
-                        client_socket.send(mes.encode("utf-8"))
-                        print (f"last invoice generated name {b} sno {c}")
-                    else :
+                #     if os.path.exists(file):
+                #         win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(label_printer))
+                #         mes = f" invoice generated successfully name {b} sno {c}"
+                #         client_socket.send(mes.encode("utf-8"))
+                #         print (f"last invoice generated name {b} sno {c}")
+                #     else :
                     
-                        er = "error occured while printng"
-                        client_socket.send(er.encode("utf-8"))
-                        print(er)
-                except Exception as e :
-                    er = str(e)
-                    client_socket.send(er.encode("utf-8"))  
-                    print(er)   
+                #         er = "error occured while printng"
+                #         client_socket.send(er.encode("utf-8"))
+                #         print(er)
+                # except Exception as e :
+                #     er = str(e)
+                #     client_socket.send(er.encode("utf-8"))  
+                #     print(er)   
             else:
                 mes = "No new records found in the database."
 

@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from docxtpl import *
-import time 
+import time as tm
 import os
 import pymysql as mq
 import json
@@ -144,20 +144,56 @@ def Home_screen ():
                 for x in range(1):
                     my_cur.execute("SELECT * FROM Customers_list ORDER BY Sno DESC LIMIT 1")
                     last = my_cur.fetchone()
-                so = s.socket(s.AF_INET, s.SOCK_STREAM)
-                host = s.gethostname()
-                porta = int(port)
-                so.connect((host, porta))
-                cm = "generate"
-                data = json.dumps({"command": cm})
-                so.send(data.encode("utf-8"))
+                    sno, time, name, contact, qty, description, rate, amount, tamount, discount, balance, delivery, status = last
+                #os.chdir("D:/pythonProject/soft")
+                    doc = DocxTemplate("utility/WSE invoice.docx")
+                    doc.render({"sno": sno, "time_now": time, "name": name, "contact": contact, "qt": qty,
+                             "description": description, "r": rate, "amt": amount, "t_amt": tamount, "d_amt": discount,
+                             "b_amt": balance, "d_time": delivery, "status": status})
 
-                massage = so.recv(1024).decode("utf-8")
-                tex.delete(0.0, tk.END)
-                tex.insert(tk.END, f" NOTE: {massage} !")
-                so.close()
-                print(last)
-                break
+                    b = str(name)
+                    c = str(sno)
+
+                #"C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
+                    doc.save(f"{path}/new_invoice '{b}' '{c}'.docx")
+                    tex.delete(0.0, tk.END)
+                    tex.insert(tk.END, f"NOte: {b+c} !")
+                #file = "C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
+                #file = f"{path}/new_invoice '{b}' '{c}'.docx"
+                # i commented them out for try 
+                # try :
+
+                #     if os.path.exists(file):
+                #         win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(printer))
+                #         mes = f" invoice generated successfully name {b} sno {c}"
+                #         client_socket.send(mes.encode("utf-8"))
+                #         print (f" last generated invoice name {0},sno {1}").format(b,c)
+                #     else :
+                    
+                #         er = "error occured while printng"
+                #         client_socket.send(er.encode("utf-8"))
+                # except Exception as e :
+                #     er = str(e)
+                #     client_socket.send(er.encode("utf-8"))     
+                else:
+                    mes = "No new records found in the database."
+
+                    #client_socket.send(mes.encode("utf-8"))
+               
+                # so = s.socket(s.AF_INET, s.SOCK_STREAM)
+                # host = s.gethostname()
+                # porta = int(port)
+                # so.connect((host, porta))
+                # cm = "generate"
+                # data = json.dumps({"command": cm})
+                # so.send(data.encode("utf-8"))
+
+                # massage = so.recv(1024).decode("utf-8")
+                # tex.delete(0.0, tk.END)
+                # tex.insert(tk.END, f"NOte: {massage} !")
+                # so.close()
+                # print(last)
+                    break
                 
             except Exception as e:
                 tex.delete(0.0, tk.END)
@@ -593,22 +629,59 @@ def ADD_screen ():
             tex.insert(tk.END, f"Error: {e}")
     
     
-    def generate_slip_rendom(port):
+    def generate_slip_rendom():
         while True:
-            so = s.socket(s.AF_INET, s.SOCK_STREAM)
-            host = s.gethostname()
-            porta = int(port)
-            so.connect((host, porta))   
-            item_sno = str(entr_print.get())
-            data = json.dumps({"command":"serial","sno":item_sno,}).encode('utf-8')
-            so.send(data)
-        
-            
-            massage =so.recv(1024).decode('utf-8')
-            tex.delete(0.0,tk.END)
-            tex.insert(tk.END, f" NOTE: {massage} !")
-            so.close()
-            print("this is serial no ",item_sno)
+     
+            sn = entr_print.get()
+            sn_1= str(sn)
+            seri = ("SELECT * FROM Customers_list WHERE Sno = %s ORDER BY Sno ")
+            my_cur.execute(seri,(sn_1,))
+            result = my_cur.fetchone()
+
+            print(f"it's lenght is {len(result)}")
+            if result:
+                sno, time, name, contact, qty, description, rate, amount, tamount, discount, balance, delivery, status = result
+                doc = DocxTemplate("utility/WSE invoice.docx")
+                doc.render({"sno": sno, "time_now": time, "name": name, "contact": contact, "qt": qty,
+                             "description": description, "r": rate, "amt": amount, "t_amt": tamount, "d_amt": discount,
+                             "b_amt": balance, "d_time": delivery, "status": status})
+                b = str(name)
+                c = str(sno)
+
+                #"C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
+                doc.save(f"{path}/new_invoice '{b}' '{c}'.docx")
+                #file = "C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
+                file = f"{path}/new_invoice '{b}' '{c}'.docx"
+
+                #i commented them out 
+                # try :
+
+                #     if os.path.exists(file):
+                #         win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(printer))
+                #         mes = f" invoice generated successfully name {b} sno {c}"
+                #         client_socket.send(mes.encode("utf-8"))
+                #         print (f"last invoice generated name {b} sno {c}")
+                #     else :
+                    
+                #         er = "error occured while printng"
+                #         client_socket.send(er.encode("utf-8"))
+                #         print(er)
+                # except Exception as e :
+                #     er = str(e)
+                #     client_socket.send(er.encode("utf-8"))  
+                #     print(er)   
+                tex.delete(0.0,tk.END)
+                tex.insert(tk.END,f"invoice generated {c}")
+            else:
+                mes = "No new records found in the database."
+
+                tex.delete(0.0,tk.END)
+                tex.insert(tk.END,mes)
+                break
+            # tex.delete(0.0,tk.END)
+            # tex.insert(tk.END, f"no data or no invoice!")
+            # so.close()
+            # print("this is serial no ",item_sno)
             break
              
     add_f = ttk.LabelFrame(root,width=1255,height=605,text="  SEARCH SCREEN  ")
@@ -691,7 +764,7 @@ def ADD_screen ():
     entr_ser_yr = ttk.Entry(add_f,width=6,font=("helvetica",16))
     entr_ser_yr.place(x=1110,y=520)
     a = ttk.Label(add_f,)
-    ser_but_sno = ttk.Button(add_f,width=80,text=" C L I C K   M E   F O R   P R I N T   S N O",command=lambda:generate_slip_rendom(port))
+    ser_but_sno = ttk.Button(add_f,width=80,text=" C L I C K   M E   F O R   P R I N T   S N O",command=generate_slip_rendom)
     ser_but_sno.place(x=50 ,y=460)
     but_1.config(bg="light grey")
     but_2.config(bg="light green")
@@ -755,31 +828,99 @@ def History_screen ():
         tex.delete(0.0, tk.END)
         tex.insert(tk.END, f"Error {e}")
     # method for generating slip with word template    
-    def generate_slip(port):# it is generating token 
+    def generate_slip():# it is generating token 
         while True:
-            try:
-                for x in range(1):
-                    my_cur.execute("SELECT * FROM token_list ORDER BY Sno DESC LIMIT 1")
-                    last = my_cur.fetchone()
-                so = s.socket(s.AF_INET, s.SOCK_STREAM)
-                host = s.gethostname()
-                porta = int(port)
-                so.connect((host, porta))
-                cm = "token"
-                data = json.dumps({"command": cm})
-                so.send(data.encode("utf-8"))
+            
+            seri = ("SELECT * FROM token_list ORDER BY Sno DESC LIMIT 1 ")
+            my_cur.execute(seri)
+            result = my_cur.fetchone()
 
-                massage = so.recv(1024).decode("utf-8")
-                tex.delete(0.0, tk.END)
-                tex.insert(tk.END, f" NOTE: {massage} !")
-                so.close()
-                print(last)
-                break
-                
-            except Exception as e:
-                tex.delete(0.0, tk.END)
-                tex.insert(tk.END, f"Error  {e}")
+            print(f"it's lenght is {len(result)}")
+            if result:
+                sno, time, name, contact, qty, description = result
+                doc = DocxTemplate("utility/token.docx")
+                doc.render({"sno": sno, "time_now": time, "name": name, "contact": contact, "qt": qty,
+                             "description": description})
+                b = str(name)
+                c = str(sno)
+
+                #"C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
+                doc.save(f"{path}/new_token '{b}' '{c}'.docx")
+                #file = "C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
+                file = f"{path}/new_token '{b}' '{c}'.docx"
+
+                #i commented them out 
+                # try :
+
+                #     if os.path.exists(file):
+                #         win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(printer))
+                #         mes = f" invoice generated successfully name {b} sno {c}"
+                #         client_socket.send(mes.encode("utf-8"))
+                #         print (f"last invoice generated name {b} sno {c}")
+                #     else :
+                    
+                #         er = "error occured while printng"
+                #         client_socket.send(er.encode("utf-8"))
+                #         print(er)
+                # except Exception as e :
+                #     er = str(e)
+                #     client_socket.send(er.encode("utf-8"))  
+                #     print(er)   
+                tex.delete(0.0,tk.END)
+                tex.insert(tk.END,f"token generated {c}")
+            else:
+                mes = "No new records found in the database."
+
+                tex.delete(0.0,tk.END)
+                tex.insert(tk.END,mes)
+            break
         #frame fro treeview
+    def generate_label(event=None):
+        while True:
+     
+            sn = entr_sno.get()
+            sn_1= str(sn)
+            my_cur.execute(f"Select * FROM Customers_list WHERE Sno ={sn_1}")
+            result = my_cur.fetchone()
+            current_time = tm.strftime("%Y-%m-%d T%H:%M")
+            if result:
+                sno, time, name, contact, qty, description, rate, amount, tamount, discount, balance, delivery, status = result
+                doc = DocxTemplate("utility/label.docx")
+                sno_1 =f"INV00{sno}"
+                doc.render({"sno": sno_1, "time_now": current_time, "name": name,"status":"OK"})
+                b = str(name)
+                c = str(sno)
+
+                #"C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
+                doc.save(f"{path}/new_label '{b}' '{c}'.docx")
+                #file = "C:/Users/wasaf/OneDrive/Desktop/WSE_INVOICES.docx/new_invoice '" + b + "' '" + c + "' .docx"
+                file = f"{path}/new_label '{b}' '{c}'.docx"
+
+                #i commented them out 
+                # try :
+
+                #     if os.path.exists(file):
+                #         win32api.ShellExecute(0,"print",file,printer,".",win32print.OpenPrinter(printer))
+                #         mes = f" invoice generated successfully name {b} sno {c}"
+                #         client_socket.send(mes.encode("utf-8"))
+                #         print (f"last invoice generated name {b} sno {c}")
+                #     else :
+                    
+                #         er = "error occured while printng"
+                #         client_socket.send(er.encode("utf-8"))
+                #         print(er)
+                # except Exception as e :
+                #     er = str(e)
+                #     client_socket.send(er.encode("utf-8"))  
+                #     print(er)   
+                tex.delete(0.0,tk.END)
+                tex.insert(tk.END,f"label generated {c}")
+            else:
+                mes = "No new records found in the database."
+
+                tex.delete(0.0,tk.END)
+                tex.insert(tk.END,mes)
+            break  
     def all_done ():
         inserts()
         get_data()
@@ -825,12 +966,12 @@ def History_screen ():
     c.place(x=10,y=450)
     d = tk.Label(tok_f,width=16,text="DESCRIPTION",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
     d.place(x=10,y=490)
-    # e = tk.Label(tok_f,width=16,text="RATE",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
+    # e = tk.Label(tok_f,width=32,text="RATE",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
     # e.place(x=10,y=530)
-    # f = tk.Label(tok_f,width=16,text="AMOUNT",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
-    # f.place(x=500,y=370)
-    # h = tk.Label(tok_f,width=16,text="TOTAL AMOUNT",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
-    # h.place(x=500,y=410)
+    f = tk.Label(tok_f,width=52,text="Create Label Here! ",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
+    f.place(x=500,y=370)
+    h = tk.Label(tok_f,width=16,text="Sno",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
+    h.place(x=500,y=410)
     # i = tk.Label(tok_f,width=16,text="BALANCE",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
     # i.place(x=500,y=450)
     # j = tk.Label(tok_f,width=16,text="DISCOUNT",font=("helvetica",12),bg="#5fb700",fg="white",height=1)
@@ -855,8 +996,9 @@ def History_screen ():
     entr_description.place(x=205,y=485)
     # entr_rate = ttk.Entry(tok_f,font=("helvetica",12))
     # entr_rate.place(x=205,y=525)
-    # entr_amount = ttk.Entry(tok_f,font=("helvetica",12))
-    # entr_amount.place(x=695,y=365)
+    entr_sno = ttk.Entry(tok_f,font=("helvetica",12))
+    entr_sno.place(x=695,y=405)
+    entr_sno.bind("<Return>",generate_label)
     # entr_t_amount = ttk.Entry(tok_f,font=("helvetica",12))
     # entr_t_amount.place(x=695,y=405)
     # entr_discount= ttk.Entry(tok_f,font=("helvetica",12))
@@ -869,7 +1011,7 @@ def History_screen ():
     #creating cut buttons for entries
     submit_but = ttk.Button(tok_f,width=10,text="SAVE",command=all_done)
     submit_but.place(x=670,y=265)
-    generate_but = ttk.Button(tok_f,width=10,text="PRINT",command=lambda: generate_slip(port))
+    generate_but = ttk.Button(tok_f,width=10,text="PRINT",command=generate_slip)
     generate_but.place(x=870,y=265)
     preview_but = ttk.Button(tok_f,width=10,text="CHECK",command=preview)
     preview_but.place(x=670,y=305)
@@ -982,7 +1124,7 @@ user = data["database"]["user"]
 database = data["database"]["database"]
 password = data["database"]["password"]
 port = data["database"]["soc_port"]
-
+path = data["output"]["path"]
 try:
 
 # connecting with database if database exist

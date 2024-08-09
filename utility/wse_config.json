@@ -1,6 +1,6 @@
 {
     "database" : {
-        "host" : "localhost:8080",
+        "host" : "localhost",
         "user" : "root",
         "database" : "wasaf",
         "password" : "",

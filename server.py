@@ -134,9 +134,9 @@ try:
         elif  client_data.get("command", "") == "token":
 
             print("Received data from client:", client_data)
-            sno = client_data.get("sno","")
-            sn_o = str(sno)
-            my_cur.execute(f"Select * FROM Token_list WHERE Sno ={sn_o}")
+            # sno = client_data.get("sno","")
+            # sn_o = str(sno)
+            my_cur.execute(f"Select * FROM Token_list ORDER BY Sno DESC LIMIT 1")
             token = my_cur.fetchone()
             if token:
                 sno, time, name, contact, qty, description= token

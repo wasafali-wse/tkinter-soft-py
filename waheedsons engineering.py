@@ -755,7 +755,7 @@ def History_screen ():
         tex.delete(0.0, tk.END)
         tex.insert(tk.END, f"Error {e}")
     # method for generating slip with word template    
-    def generate_slip(port):
+    def generate_slip(port):# it is generating token 
         while True:
             try:
                 for x in range(1):
@@ -765,7 +765,7 @@ def History_screen ():
                 host = s.gethostname()
                 porta = int(port)
                 so.connect((host, porta))
-                cm = "generate"
+                cm = "token"
                 data = json.dumps({"command": cm})
                 so.send(data.encode("utf-8"))
 
